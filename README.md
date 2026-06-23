@@ -165,7 +165,7 @@ student-performance-analytics/
  Clone Repository
 
 ```bash
-git clone https://github.com/your-username/student-performance-analytics.git
+git clone https://github.com/Jagy12/student-performance-analytics.git
 
 cd student-performance-analytics
 ```
