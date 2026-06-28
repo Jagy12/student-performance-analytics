@@ -2,6 +2,7 @@ import pandas as pd
 from database import get_connection
 
 conn = get_connection()
+
 def load_departments():
     return pd.read_sql(
         "SELECT * FROM Departments",
@@ -33,4 +34,3 @@ def load_attendance():
         "SELECT * FROM Attendance",
         conn
     )
-conn.close()

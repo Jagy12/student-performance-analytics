@@ -10,7 +10,7 @@ conn = get_connection()
 def students_per_department_chart():
     students_by_dept = students_per_department()
 
-    plt.figure(figsize=(10,5))
+    plt.figure(figsize=(5,3))
 
     plt.bar(
     students_by_dept.index,
@@ -19,6 +19,10 @@ def students_per_department_chart():
     plt.xlabel('Department')
     plt.ylabel('Number of Students')
     plt.title('Students per Department')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    return plt.gcf()
 
     
 
@@ -27,7 +31,7 @@ def students_per_department_chart():
 def average_marks_per_department_chart():
   average_marks = average_marks_per_department()
 
-  plt.figure(figsize=(10,5))
+  plt.figure(figsize=(5,3))
 
   plt.bar(average_marks.index,
         average_marks.values)
@@ -35,6 +39,11 @@ def average_marks_per_department_chart():
   plt.xlabel('Department')
   plt.ylabel('Average marks of Students')
   plt.title('Average Marks by Department')
+
+  plt.xticks(rotation=45)
+  plt.tight_layout()
+
+  return plt.gcf()
 
   
 
@@ -76,7 +85,7 @@ def attendance_per_department_chart():
 def top_10_students_chart():
   top_10 = top_ten()
 
-  plt.figure(figsize=(10,5))
+  plt.figure(figsize=(5,3))
 
   plt.barh(
     top_10['student_name'],
@@ -86,6 +95,10 @@ def top_10_students_chart():
   plt.xlabel('Average Marks')
   plt.ylabel('Student Name')
   plt.title('Top 10 Students')
+  plt.xticks(rotation=45)
+  plt.tight_layout()
+
+  return plt.gcf()
 
   
 
@@ -137,11 +150,6 @@ def topper_department_contribution_chart():
 # plt.xlabel('Marks')
 # plt.ylabel('Frequency')
 
-# 
-
-if __name__ == "__main__":
-    students_per_department_chart()
-
 
 
 
@@ -158,8 +166,6 @@ def save_chart(filename):
 
     print(f'{filename} saved.')
 
-
-# CHART EXPORTS
 
 def export_students_per_department_chart():
     students_per_department_chart()

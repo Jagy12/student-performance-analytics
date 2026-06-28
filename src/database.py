@@ -1,16 +1,19 @@
-import mysql.connector
+from dotenv import load_dotenv
+import os
+import pymysql
+
+load_dotenv()
+
+HOST = os.getenv("DB_HOST")
+USER = os.getenv("DB_USER")
+PASSWORD = os.getenv("DB_PASSWORD")
+DATABASE = os.getenv("DB_NAME")
+
 
 def get_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Password",
-        database="studentperformanceanalyticssystem"
+    return pymysql.connect(
+        host=HOST,
+        user=USER,
+        password=PASSWORD,
+        database=DATABASE
     )
-
-if __name__ == "__main__":
-    try:
-        conn = get_connection()
-        print("Database Connected Successfully!")
-    except Exception as e:
-        print("Error:", e)

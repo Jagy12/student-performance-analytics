@@ -1,11 +1,13 @@
 import pandas as pd
 from  database import get_connection
+from data_loader import *
+
 conn = get_connection()
 
 ## 1. Number of students per department👇
 
 def students_per_department():
-    students_df = pd.read_sql('SELECT * FROM Students', conn)
+    students_df = load_students()
     dept_count = students_df.groupby('department_id')['student_id'].count()
     return dept_count
 # print(students_per_department())
@@ -13,7 +15,7 @@ def students_per_department():
 ## 2. Average marks of students👇
 
 def average_marks_per_student():
-    marks_df = pd.read_sql('SELECT * FROM Marks', conn)
+    marks_df = load_marks()
     avg_marks = marks_df.groupby('student_id')['marks'].mean()
     return avg_marks
 # print(average_marks_per_student())
@@ -21,25 +23,25 @@ def average_marks_per_student():
 ## 3. Topper details👇
 
 def topper():
-    students_df = pd.read_sql('SELECT * FROM Marks', conn)
+    students_df = load_students()
+    departments_df = load_departments()
     avg_marks = average_marks_per_student()
     topper_mark = avg_marks.max()
     topper_id = avg_marks.idxmax()
-    topper_details = students_df[students_df['student_id'] == topper_id]
+    merged = pd.merge(students_df,
+                      departments_df,
+                      on='department_id')
+    topper_details = merged[merged['student_id'] == topper_id]
+    
     return topper_mark, topper_id, topper_details
 # print(topper())
 
 # 4. Average Marks by Department👇
 
 def average_marks_per_department():
-    students_df = pd.read_sql(
-    "SELECT * FROM Students",
-    conn
-)
-    marks_df = pd.read_sql(
-    "SELECT * FROM Marks",
-    conn
-)
+    students_df = load_students()
+    marks_df = load_marks()
+
     average_marks = pd.merge(
     students_df,
     marks_df,
@@ -51,14 +53,8 @@ def average_marks_per_department():
 
 # 5. Average attendance per department👇
 def average_attendance_per_dept():
-    students_df = pd.read_sql(
-    "SELECT * FROM Students",
-    conn
-)
-    attendance_df = pd.read_sql(
-    "SELECT * FROM Attendance",
-    conn
-)
+    students_df = load_students()
+    attendance_df = load_attendance()
 
     merged = pd.merge(
     students_df,
@@ -73,10 +69,7 @@ def average_attendance_per_dept():
 
 def top_ten():
 
-    students_df = pd.read_sql(
-        'SELECT * FROM Students',
-        conn
-    )
+    students_df = load_students()
 
     avg_marks = average_marks_per_student()
 
@@ -109,10 +102,8 @@ def top_ten():
 ## 7. Topper Department wise contribution👇
 
 def topper_department_contribution():
-    students_df = pd.read_sql(
-        'SELECT * FROM Students',
-        conn
-    )
+    students_df = load_students()
+
     merged = top_ten()
     dept_count = merged.groupby('department_id')['student_id'].count()
     return dept_count
@@ -121,7 +112,7 @@ def topper_department_contribution():
 
 ## 8. High performer percentage / Pass percentage per department👇
 def High_performer_percentage():
-    students_df = pd.read_sql("SELECT * FROM Students", conn)
+    students_df = load_students()
     avg_marks = average_marks_per_student()
     avg_marks = avg_marks.reset_index()
     avg_marks['high'] = avg_marks['marks'] >= 80
@@ -141,15 +132,9 @@ def High_performer_percentage():
 
 ## 9. Filetring Low and High attendance👇
 
-# attendance_df = pd.read_sql(
-#     'SELECT * FROM Attendance',
-#     conn
-# )
+# attendance_df = load_attendance()
 
-# students_df = pd.read_sql(
-#     'SELECT * FROM Students',
-#     conn
-# )
+# students_df = load_students()
 
 # students_attendance = pd.merge(
 #     attendance_df,
@@ -182,8 +167,8 @@ def High_performer_percentage():
 # 10.Marks Vs Attendance👇
 
 def marks_vs_attendance():
-    marks_df = pd.read_sql('SELECT * FROM Marks;',conn) 
-    attendance_df = pd.read_sql('SELECT * FROM Attendance;',conn)
+    marks_df = load_marks() 
+    attendance_df = load_attendance()
 
     avg_marks = average_marks_per_student().reset_index()
     merged = pd.merge(
